@@ -24,7 +24,7 @@ fn read_file() -> Result<FxHashMap<String, StationReadings>> {
     let num_cpus = available_parallelism()?.get();
     let mut result: FxHashMap<String, StationReadings> = FxHashMap::default();
 
-    let file = File::open("../data_builder/measurements_1b.txt")?;
+    let file = File::open("../data_builder/measurements.txt")?;
     let memory_map = unsafe { memmap::Mmap::map(&file)? }; // It's now a big sea of bytes!
 
     // Split the memory map into chunks of roughly equal size
@@ -41,7 +41,7 @@ fn read_file() -> Result<FxHashMap<String, StationReadings>> {
             '\n'
         );
         chunk_indices.push(chunk_starts_at);
-        counter = chunk_starts_at + chunk_size;
+        counter = chunk_starts_at + chunk_size + 1;
     }
 
     // Now we can spawn threads to process each chunk. We'll use scoped threads to make
