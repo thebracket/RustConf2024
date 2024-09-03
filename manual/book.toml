@@ -1,0 +1,6 @@
+[book]
+authors = ["Herbert Wolverson"]
+language = "en"
+multilingual = false
+src = "src"
+title = "RustConf 2024 - 1 Billion Rows"

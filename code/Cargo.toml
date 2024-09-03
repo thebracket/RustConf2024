@@ -1,0 +1,20 @@
+[package]
+name = "code"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[workspace]
+members = [ "accumulate",
+    # Creates the data sets
+    "data_builder", "fast_hasher", "memory_map", "parallel",
+
+    # Simple Buffered Reader
+    "simple_line_reader", "simple_line_reader2",
+]
+
+[workspace.dependencies]
+anyhow = "1.0.44"
+rustc-hash = "2.0.0"
+memmap = "0.7.0"

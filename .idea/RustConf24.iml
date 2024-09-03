@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/code/data_builder/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/fast_minmax/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/faster_hasher/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/lock_stdout/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/mmap_chunked/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/mmap_single/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/rayon_minmax/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/simple_line_reader/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/accumulate/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/fast_hasher/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/memory_map/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/parallel/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/simple_line_reader2/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/code/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
