@@ -1,5 +1,4 @@
 use std::fs::File;
-use std::sync::Mutex;
 use std::thread;
 use std::thread::available_parallelism;
 use anyhow::Result;
@@ -23,9 +22,9 @@ fn find_next(memory_map: &[u8], start: usize, character: char) -> usize {
 
 fn read_file() -> Result<FxHashMap<String, StationReadings>> {
     let num_cpus = available_parallelism()?.get();
-    let result: Mutex<FxHashMap<String, StationReadings>> = Mutex::new(FxHashMap::default());
+    let mut result: FxHashMap<String, StationReadings> = FxHashMap::default();
 
-    let file = File::open("../data_builder/measurements.txt")?;
+    let file = File::open("../data_builder/measurements_1b.txt")?;
     let memory_map = unsafe { memmap::Mmap::map(&file)? }; // It's now a big sea of bytes!
 
     // Split the memory map into chunks of roughly equal size
@@ -48,6 +47,7 @@ fn read_file() -> Result<FxHashMap<String, StationReadings>> {
     // Now we can spawn threads to process each chunk. We'll use scoped threads to make
     // it easier to manage the lifetimes of the threads.
     thread::scope(|scope| {
+        let mut handles = vec![];
         for cpu in 0 .. num_cpus {
             // Start by acquiring our own copy of variables to move.
             let memory_map = &memory_map; // We're only moving the pointer, not the data
@@ -57,8 +57,7 @@ fn read_file() -> Result<FxHashMap<String, StationReadings>> {
             } else {
                 chunk_indices[cpu + 1]
             };
-            let result = &result;
-            scope.spawn(move || {
+            let handle = scope.spawn(move || {
                 let mut local_result: FxHashMap<String, StationReadings> = FxHashMap::default();
                 let mut index = chunk_start;
                 while index < chunk_end {
@@ -90,23 +89,27 @@ fn read_file() -> Result<FxHashMap<String, StationReadings>> {
                     }
                 }
 
-                // Merge the local result into the global result
-                let mut result = result.lock().unwrap();
-                for (station, readings) in local_result {
-                    if let Some(existing) = result.get_mut(&station) {
-                        existing.min = f32::min(existing.min, readings.min);
-                        existing.max = f32::max(existing.max, readings.max);
-                        existing.sum += readings.sum;
-                        existing.count += readings.count;
-                    } else {
-                        result.insert(station, readings);
-                    }
-                }
+                local_result
             }); // End thread
+            handles.push(handle);
+        }
+
+        for handle in handles {
+            let local_result = handle.join().unwrap();
+            for (station, readings) in local_result {
+                if let Some(result) = result.get_mut(&station) {
+                    result.min = f32::min(result.min, readings.min);
+                    result.max = f32::max(result.max, readings.max);
+                    result.sum += readings.sum;
+                    result.count += readings.count;
+                } else {
+                    result.insert(station, readings);
+                }
+            }
         }
     });
 
-    Ok(result.into_inner()?)
+    Ok(result)
 }
 
 struct Reading {
