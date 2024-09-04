@@ -11,7 +11,7 @@ members = [ "accumulate", "blazing_fast", "blazing_fast2", "blazing_fast3", "cha
     "data_builder", "fast_hasher", "memory_map", "parallel",
 
     # Simple Buffered Reader
-    "simple_line_reader", "simple_line_reader2",
+    "simple_line_reader", "simple_line_reader2", "tokio_challenge",
 ]
 
 [workspace.dependencies]

@@ -1,0 +1,11 @@
+[package]
+name = "tokio_challenge"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.40.0", features = ["full"] }
+anyhow = { workspace = true }
+rustc-hash = { workspace = true }
+memmap = { workspace = true }
+futures = "0.3.30"

@@ -41,4 +41,7 @@
   - [Add a Channel](./add-a-channel.md)
   - [Final Timings](./final-timings.md)
 - [Where Does Async Fit In?](./where-does-async-fit-in.md)
+  - [It's a trap!](./async-trap.md)
+  - [Wait, it's not that trappy?](./async-trap-2.md)
+  - [Sending Results to a Server](./async-trap-3.md)
 - [Wrap-Up](./wrap-up.md)
