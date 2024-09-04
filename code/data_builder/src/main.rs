@@ -7,7 +7,10 @@ use rand_distr::Normal;
 use rand_xorshift::XorShiftRng;
 
 //const ITEMS_TO_BUILD: usize = 1_000_000_000;
+//const FILENAME: &str = "measurements_1b.txt";
+
 const ITEMS_TO_BUILD: usize = 1_000_000;
+const FILENAME: &str = "measurements.txt";
 
 struct WeatherStation {
     id: String,
@@ -47,7 +50,7 @@ fn main() -> anyhow::Result<()> {
 
     println!("Building Measurements");
     let mut rng = XorShiftRng::from_rng(rand::thread_rng())?;
-    let outfile = File::create("measurements.txt")?;
+    let outfile = File::create(FILENAME)?;
     let mut stream = BufWriter::new(outfile);
     for _ in 0 .. ITEMS_TO_BUILD {
         let station = stations.choose(&mut rng)

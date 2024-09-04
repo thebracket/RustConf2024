@@ -23,6 +23,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c4b4d0bd25bd0b74681c0ad21497610ce1b7c91b1022cd21c80c6fbdd9476b0"
 
 [[package]]
+name = "blazing_fast"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "memmap",
+ "rustc-hash",
+]
+
+[[package]]
+name = "blazing_fast2"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "memmap",
+ "rustc-hash",
+]
+
+[[package]]
+name = "blazing_fast3"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "memmap",
+ "rustc-hash",
+]
+
+[[package]]
 name = "byteorder"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -33,6 +60,15 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
+name = "channelize"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "memmap",
+ "rustc-hash",
+]
 
 [[package]]
 name = "code"

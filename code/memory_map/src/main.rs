@@ -21,7 +21,7 @@ fn find_next(memory_map: &[u8], start: usize, character: char) -> usize {
 fn read_file() -> Result<FxHashMap<String, StationReadings>> {
     let mut result: FxHashMap<String, StationReadings> = FxHashMap::default();
 
-    let file = File::open("../data_builder/measurements_1b.txt")?;
+    let file = File::open("../data_builder/measurements.txt")?;
     let memory_map = unsafe { memmap::Mmap::map(&file)? }; // It's now a big sea of bytes!
 
     let mut index = 0;

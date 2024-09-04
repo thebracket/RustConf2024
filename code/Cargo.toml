@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 
 [workspace]
-members = [ "accumulate",
+members = [ "accumulate", "blazing_fast", "blazing_fast2", "blazing_fast3", "channelize",
     # Creates the data sets
     "data_builder", "fast_hasher", "memory_map", "parallel",
 

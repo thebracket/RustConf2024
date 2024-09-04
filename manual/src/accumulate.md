@@ -1,26 +1,21 @@
 # Accumulate
 
-Since we just want a min/max/mean - we only need to *accumulate* some data rather
-than storing every entry. We no longer have to allocate a vector for every station,
-nor expand it as we read more data.
+> The code for this is in `code/accumulate`.
 
-```
-File & hash time: 0.096s
-Calculate time:   0.001s
-Print time:       0.723s
-TOTAL:            0.820s
-```
+If you look at the code we have so far, we're:
 
-So our total time has slightly improved from `0.877s` to `0.820s`. Not a huge improvement, but it's something.
+1. Reading the file, one row at a time.
+2. Each row is hashed to a station.
+3. We push the reading onto the vector for that station.
+4. We calculate the min/max/mean for each station at the end.
 
-Let's try it with 1 billion rows:
+Since vector's grow as you add to them, we're doing a ton of memory allocation. We're also trashing our CPU
+cache by jumping around all over the place: each vector consists of a pointer to its capacity and its size. So
+every single reading is finding the vector in the hash table, following the pointer, and then appending to
+the vector's buffer. On top of that, every time we fill up the vector, Rust helpfully reallocates it to double
+its size, copying all the data over.
 
-```
-File & hash time: 85.700s
-Calculate time:   0.001s
-Print time:       0.732s
-TOTAL:            86.433s
+And here's the kicker: to calculate a min/max/mean, we don't need to store every reading. We just need to
+accumulate the minimum, maximum, sum and count of values.
 
-```
-
-That's an improvement from `107.915s`.
+In other words, we're doing a *lot* more work than we need to.

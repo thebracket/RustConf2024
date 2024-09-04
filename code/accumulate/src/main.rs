@@ -13,7 +13,7 @@ struct StationReadings {
 
 fn read_file() -> Result<FxHashMap<String, StationReadings>> {
     let mut result: FxHashMap<String, StationReadings> = FxHashMap::default();
-    let file = File::open("../data_builder/measurements_1b.txt")?;
+    let file = File::open("../data_builder/measurements.txt")?;
     let reader = std::io::BufReader::new(file);
     for line in reader.lines() {
         let line = line?;

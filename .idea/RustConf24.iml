@@ -16,6 +16,10 @@
       <sourceFolder url="file://$MODULE_DIR$/code/memory_map/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/code/parallel/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/code/simple_line_reader2/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/blazing_fast/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/blazing_fast2/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/channelize/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/code/blazing_fast3/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/code/target" />
     </content>
     <orderEntry type="inheritedJdk" />

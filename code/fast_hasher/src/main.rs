@@ -5,7 +5,7 @@ use rustc_hash::FxHashMap;
 
 fn read_file() -> Result<FxHashMap<String, Vec<f32>>> {
     let mut result = FxHashMap::default();
-    let file = File::open("../data_builder/measurements_1b.txt")?;
+    let file = File::open("../data_builder/measurements.txt")?;
     let reader = std::io::BufReader::new(file);
     for line in reader.lines() {
         let line = line?;

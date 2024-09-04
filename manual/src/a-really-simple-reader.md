@@ -1,68 +1,22 @@
 # A Really Simple Reader
 
-So let's start with a really simple, step-by-step reader.
+So let's start with a really simple, step-by-step reader. The code for this is in `code/simple_line_reader`.
 
-```rust
-struct RawReading {
-    station: String,
-    temperature: f32,
-}
+We're going to build a very simple reader that breaks all the steps down into individual functions,
+and times them. This will give us a good idea of how long each step takes, and give us a handle
+on where we might want to focus our efforts.
 
-fn read_file() -> Result<Vec<RawReading>> {
-    let file = File::open("../data_builder/measurements.txt")?;
-    let reader = std::io::BufReader::new(file);
-    let mut result = vec![];
-    for line in reader.lines() {
-        let line = line?;
-        let mut parts = line.split(';');
-        let station = parts.next().context("No next!")?.to_string();
-        let temperature = parts.next().context("No next!")?.parse::<f32>()?;
-        result.push(RawReading { station, temperature });
-    }
-    Ok(result)
-}
-```
+The steps:
 
-```rust
-fn hash_file(readings: &[RawReading]) -> Result<HashMap<String, Vec<f32>>> {
-    let result = readings.iter().fold(HashMap::new(), |mut acc, reading| {
-        acc.entry(reading.station.clone()).or_insert(vec![]).push(reading.temperature);
-        acc
-    });
-    Ok(result)
-}
-```
+1. Read the file line by line.
+2. Break readings out into a `HashMap`, keyed on the station name and storing readings.
+3. Iterate through each station's readings and calculate the minimum, maximum, and average.
+4. Print out the results in the desired format.
 
-```rust
-struct Reading {
-    station: String,
-    min: f32,
-    max: f32,
-    mean: f32,
-}
+## But First: Some Macro Magic
 
-fn calculate(readings: HashMap<String, Vec<f32>>) -> Result<Vec<Reading>> {
-    let mut result = vec![];
-    readings.into_iter().for_each(|(station, mut readings)| {
-        let min = readings.iter().min_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
-        let max = readings.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
-        let sum = readings.iter().sum::<f32>();
-        let mean = sum / readings.len() as f32;
-        result.push(Reading { station, min: *min, max: *max, mean });
-    });
-    Ok(result)
-}
-```
-
-```rust
-fn print_results(readings: Vec<Reading>) {
-    for reading in readings {
-        println!("{};{};{};{};", reading.station, reading.min, reading.max, reading.mean);
-    }
-}
-```
-
-A handy macro!
+I got really sick of typing `let start = Instant::now; ... ; let duration = start.elapsed();` over and over again.
+So there's a handy macro in here:
 
 ```rust
 macro_rules! time_it {
@@ -78,66 +32,18 @@ macro_rules! time_it {
 }
 ```
 
-And the main function:
+> Don't macros look like a cat walked on the keyboard?
+
+Macros extend *syntax* and are expanded out to actual code during pre-processing. They're a powerful tool,
+but easy to overuse.
+
+So the inputs are: a block of code, and variable in which to store the execution time. A timer is started,
+the block of code executed, and the elapsed time (in seconds, as a float) stored in the variable. This lets us
+focus on the meat of the code we're writing. For example:
 
 ```rust
-fn main() -> Result<()> {
-    // Setup timers
-    let file_reader_time;
-    let hash_time;
-    let calculate_time;
-    let print_time;
-
-    // Read the file, row by row into a vector
-    let rows = time_it!({
+let file_reader_time;
+let rows = time_it!({
         read_file()?
     }, file_reader_time);
-
-    // Hash the rows by station
-    let stations = time_it!({
-        hash_file(&rows)?
-    }, hash_time);
-
-    // Calculate min, max and mean for each station
-    let readings = time_it!({
-        calculate(stations)?
-    }, calculate_time);
-
-    // Print the results
-    time_it!({
-        print_results(readings);
-    }, print_time);
-
-
-    println!("-----------------------------------------");
-    println!("File reader time: {:.3}s", file_reader_time);
-    println!("Hash time:        {:.3}s", hash_time);
-    println!("Calculate time:   {:.3}s", calculate_time);
-    println!("Print time:       {:.3}s", print_time);
-
-    Ok(())
-}
 ```
-
-## Oh Dear!
-
-Running this with a million rows works for my system. The timings aren't even terrible:
-
-```
-File reader time: 0.094s
-Hash time:        0.070s
-Calculate time:   0.006s
-Print time:       0.692s
-TOTAL:            0.862s
-```
-
-But when I ran it for a BILLION rows, my PC crashed. I completely exhausted my RAM and swap
-file, and the system became unresponsive. I had to hit the power button. Oops.
-
-What went wrong? There's a LOT we can improve, but let's start with the file reader. We're
-reading every single reading into a new `String` and `f32`, and then pushing it into a `Vec`.
-We then read these and get rid of them in the next step - so we're allocating 1,000,000,000 new
-strings and `f32` values, only to throw them away. That's a lot of memory churn---and a lot of
-memory to allocate.
-
-Let's try and do better.
