@@ -1,0 +1,1 @@
+![](./images/RustDiscount.jpg)

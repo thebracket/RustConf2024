@@ -1,1 +1,1 @@
-# Wrap-Up
+![](./images/Rust-Lunch-&-Learn.jpg)
