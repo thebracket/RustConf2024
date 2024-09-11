@@ -163,7 +163,9 @@ async fn main() -> anyhow::Result<()> {
     }
 
     // Spawn the receiver thread
-    tokio::spawn(async move {
+    std::mem::drop(tx); // Drop the sender to signal the receiver to finish
+
+    let _ = tokio::spawn(async move {
         // Receive the results
         let mut stations = pre_hash_stations().unwrap();
         while let Some(buffer) = rx.recv().await {
@@ -188,11 +190,10 @@ async fn main() -> anyhow::Result<()> {
         }
 
         println!("Elapsed: {:.4} seconds", start.elapsed().as_secs_f32());
-    });
+    }).await;
 
     use futures::future::join_all;
     join_all(futures).await;
-    std::mem::drop(tx); // Drop the sender to signal the receiver to finish
 
 
 
